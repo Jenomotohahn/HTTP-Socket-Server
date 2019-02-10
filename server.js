@@ -11,6 +11,7 @@ const server = net.createServer(socket => {
   //request URI to change the url data pages.
   socket.on("data", data => {
     let parseData = data.toString();
+    console.log(parseData);
     parseData = parseData.split("\n");
     const requestLine = parseData[0].split(" ");
     const method = requestLine[0];
