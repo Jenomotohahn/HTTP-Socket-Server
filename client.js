@@ -30,9 +30,10 @@ const client = net.createConnection({ port: 8080 }, () => {
 });
 
 client.on("data", data => {
-  console.log(data);
   let parseData = data.toString();
-  hashTable[requestURL] = parseData;
+  console.log(parseData);
+  parseData = parseData.split("\n\n");
+  hashTable[requestURL] = parseData[0];
   console.log(hashTable);
 });
 client.on("close", () => {
