@@ -11,30 +11,36 @@ const net = require("net");
 const processArg = process.argv;
 const requestURL = processArg[2].split("/");
 const applyHeader = requestURL[1];
-console.log(applyHeader);
-const hostHeader = requestURL[0];
-console.log(hostHeader);
-const hashTable = {};
 console.log(requestURL);
+const hostHeader = requestURL[0];
+const hashTable = {};
 
 const client = net.createConnection({ port: 8080 }, () => {
   console.log("port is open!");
-  client.write(
-    "GET /" +
-      applyHeader +
-      " HTTP/1.1\nHost: " +
-      hostHeader +
-      "\nConnection: Keep-Alive\nAccept:text/html, application/json\n" +
-      Date()
-  );
+  if (requestURL.length > 1) {
+    client.write(
+      "GET /" +
+        applyHeader +
+        " HTTP/1.1\nHost: " +
+        hostHeader +
+        "\nConnection: Keep-Alive\nAccept:text/html, application/json\n" +
+        Date()
+    );
+  } else {
+    client.write(
+      "GET / HTTP/1.1\nHost: " +
+        hostHeader +
+        "\nConnection: Keep-Alive\nAccept:text/html, application/json\n" +
+        Date()
+    );
+  }
 });
 
 client.on("data", data => {
   let parseData = data.toString();
-  console.log(parseData);
   parseData = parseData.split("\n\n");
   hashTable[requestURL] = parseData[0];
-  console.log(hashTable);
+  console.log(parseData[1]);
 });
 client.on("close", () => {
   console.log("connection closed!");
